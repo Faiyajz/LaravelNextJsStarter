@@ -1,0 +1,969 @@
+{
+	"info": {
+		"_postman_id": "supplier-fabric-mgmt-2026",
+		"name": "Supplier & Fabric Management API",
+		"description": "API collection for Supplier and Fabric Management System with authentication, CRUD operations, stock management, and barcode printing",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Test User\",\n    \"email\": \"test@example.com\",\n    \"password\": \"password123\",\n    \"password_confirmation\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/register",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.token) {",
+									"    pm.environment.set(\"auth_token\", jsonData.token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"test@example.com\",\n    \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Current User",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/user",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/logout",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"logout"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Suppliers",
+			"item": [
+				{
+					"name": "List Suppliers",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/suppliers?page=1&per_page=10&search=&country=&company_name=&representative_name=",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"suppliers"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "per_page",
+									"value": "10"
+								},
+								{
+									"key": "search",
+									"value": ""
+								},
+								{
+									"key": "country",
+									"value": ""
+								},
+								{
+									"key": "company_name",
+									"value": ""
+								},
+								{
+									"key": "representative_name",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Supplier",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"country\": \"Bangladesh\",\n    \"company_name\": \"ABC Textiles Ltd\",\n    \"code\": \"ABC001\",\n    \"email\": \"contact@abctextiles.com\",\n    \"phone\": \"+880123456789\",\n    \"address\": \"123 Textile Street, Dhaka\",\n    \"representative_name\": \"John Doe\",\n    \"representative_email\": \"john@abctextiles.com\",\n    \"representative_phone\": \"+880987654321\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/suppliers",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"suppliers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Supplier",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/suppliers/{{supplier_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"suppliers",
+								"{{supplier_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Supplier",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"country\": \"Bangladesh\",\n    \"company_name\": \"ABC Textiles Ltd - Updated\",\n    \"code\": \"ABC001\",\n    \"email\": \"contact@abctextiles.com\",\n    \"phone\": \"+880123456789\",\n    \"address\": \"456 New Address, Dhaka\",\n    \"representative_name\": \"John Doe\",\n    \"representative_email\": \"john@abctextiles.com\",\n    \"representative_phone\": \"+880987654321\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/suppliers/{{supplier_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"suppliers",
+								"{{supplier_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Supplier",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/suppliers/{{supplier_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"suppliers",
+								"{{supplier_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Trashed Suppliers",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/suppliers-trash?page=1&per_page=10",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"suppliers-trash"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "per_page",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Restore Supplier",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/suppliers/{{supplier_id}}/restore",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"suppliers",
+								"{{supplier_id}}",
+								"restore"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Fabrics",
+			"item": [
+				{
+					"name": "List Fabrics",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/fabrics?page=1&per_page=10&search=&supplier=&fabric_no=&composition=&production_type=",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"fabrics"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "per_page",
+									"value": "10"
+								},
+								{
+									"key": "search",
+									"value": ""
+								},
+								{
+									"key": "supplier",
+									"value": ""
+								},
+								{
+									"key": "fabric_no",
+									"value": ""
+								},
+								{
+									"key": "composition",
+									"value": ""
+								},
+								{
+									"key": "production_type",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Fabric",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "supplier_id",
+									"value": "{{supplier_id}}",
+									"type": "text"
+								},
+								{
+									"key": "fabric_no",
+									"value": "FAB-001",
+									"type": "text"
+								},
+								{
+									"key": "composition",
+									"value": "100% Cotton",
+									"type": "text"
+								},
+								{
+									"key": "gsm",
+									"value": "180",
+									"type": "text"
+								},
+								{
+									"key": "qty",
+									"value": "1000",
+									"type": "text"
+								},
+								{
+									"key": "cuttable_width",
+									"value": "58",
+									"type": "text"
+								},
+								{
+									"key": "production_type",
+									"value": "Bulk",
+									"type": "text"
+								},
+								{
+									"key": "construction",
+									"value": "Single Jersey",
+									"type": "text"
+								},
+								{
+									"key": "color_pantone_code",
+									"value": "PANTONE 19-4052",
+									"type": "text"
+								},
+								{
+									"key": "weave_type",
+									"value": "Plain",
+									"type": "text"
+								},
+								{
+									"key": "finish_type",
+									"value": "Enzyme Wash",
+									"type": "text"
+								},
+								{
+									"key": "dyeing_method",
+									"value": "Reactive Dye",
+									"type": "text"
+								},
+								{
+									"key": "printing_method",
+									"value": "Screen Print",
+									"type": "text"
+								},
+								{
+									"key": "lead_time",
+									"value": "30",
+									"type": "text"
+								},
+								{
+									"key": "moq",
+									"value": "500",
+									"type": "text"
+								},
+								{
+									"key": "shrinkage_percent",
+									"value": "3",
+									"type": "text"
+								},
+								{
+									"key": "remarks",
+									"value": "High quality cotton fabric",
+									"type": "text"
+								},
+								{
+									"key": "fabric_selected_by",
+									"value": "Jane Smith",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/fabrics",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"fabrics"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Fabric",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/fabrics/{{fabric_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"fabrics",
+								"{{fabric_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Fabric",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "_method",
+									"value": "PUT",
+									"type": "text"
+								},
+								{
+									"key": "supplier_id",
+									"value": "{{supplier_id}}",
+									"type": "text"
+								},
+								{
+									"key": "fabric_no",
+									"value": "FAB-001-UPDATED",
+									"type": "text"
+								},
+								{
+									"key": "composition",
+									"value": "100% Cotton",
+									"type": "text"
+								},
+								{
+									"key": "gsm",
+									"value": "180",
+									"type": "text"
+								},
+								{
+									"key": "qty",
+									"value": "1000",
+									"type": "text"
+								},
+								{
+									"key": "cuttable_width",
+									"value": "58",
+									"type": "text"
+								},
+								{
+									"key": "production_type",
+									"value": "Bulk",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/fabrics/{{fabric_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"fabrics",
+								"{{fabric_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Fabric",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/fabrics/{{fabric_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"fabrics",
+								"{{fabric_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Trashed Fabrics",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/fabrics-trash?page=1&per_page=10",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"fabrics-trash"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "per_page",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Restore Fabric",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/fabrics/{{fabric_id}}/restore",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"fabrics",
+								"{{fabric_id}}",
+								"restore"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Print Barcode",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "text/html"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/fabrics/{{fabric_id}}/barcodes/{{barcode_id}}/print",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"fabrics",
+								"{{fabric_id}}",
+								"barcodes",
+								"{{barcode_id}}",
+								"print"
+							]
+						},
+						"description": "Returns HTML page for printing barcode. This endpoint is public (no auth required)."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Fabric Stocks",
+			"item": [
+				{
+					"name": "Add Stock Transaction",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fabric_id\": \"{{fabric_id}}\",\n    \"type\": \"IN\",\n    \"quantity\": 500,\n    \"reference\": \"Challan #12345\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/fabric-stocks",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"fabric-stocks"
+							]
+						},
+						"description": "Create a stock IN or OUT transaction. Returns the created stock entry and updated available balance."
+					},
+					"response": []
+				},
+				{
+					"name": "Add Stock OUT Transaction",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fabric_id\": \"{{fabric_id}}\",\n    \"type\": \"OUT\",\n    \"quantity\": 100,\n    \"reference\": \"Issue for Order #789\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/fabric-stocks",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"fabric-stocks"
+							]
+						},
+						"description": "Issue stock (OUT transaction). Will validate sufficient balance before creating."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Notes",
+			"item": [
+				{
+					"name": "Add Note to Supplier",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"noteable_type\": \"supplier\",\n    \"noteable_id\": \"{{supplier_id}}\",\n    \"note\": \"This is a test note for the supplier.\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/notes",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"notes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Note to Fabric",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"noteable_type\": \"fabric\",\n    \"noteable_id\": \"{{fabric_id}}\",\n    \"note\": \"Quality inspection passed. Ready for production.\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/notes",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"notes"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000/api",
+			"type": "string"
+		},
+		{
+			"key": "auth_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "supplier_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "fabric_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "barcode_id",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
