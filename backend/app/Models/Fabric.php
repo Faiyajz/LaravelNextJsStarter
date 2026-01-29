@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Facades\Auth;
 use App\Traits\HasUuid;
+use App\Contracts\Notes\Notesable;
 
 /**
  * @property string|null $added_by
@@ -22,7 +23,7 @@ use App\Traits\HasUuid;
  * @method static \Illuminate\Database\Eloquent\Builder|Fabric search(?string $search)
  * @method static \Illuminate\Database\Eloquent\Builder|Fabric filter(array $filters)
  */
-class Fabric extends Model
+class Fabric extends Model implements Notesable
 {
     use HasFactory, SoftDeletes, HasUuid;
 

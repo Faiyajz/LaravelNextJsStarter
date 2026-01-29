@@ -47,7 +47,7 @@ class AppServiceProvider extends ServiceProvider
 
         RateLimiter::for('api', function (Request $request) {
             $limit = (int) config('security.rate_limits.api_per_minute', 60);
-            $userId = optional($request->user())->id;
+            $userId = $request->user()?->getKey();
             $key = $userId ? "user:{$userId}" : $request->ip();
 
             return Limit::perMinute($limit)->by($key);

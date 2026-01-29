@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Facades\Auth;
 use App\Traits\HasUuid;
+use App\Contracts\Notes\Notesable;
 
 /**
  * @property string|null $added_by
@@ -17,7 +18,7 @@ use App\Traits\HasUuid;
  * @method static \Illuminate\Database\Eloquent\Builder|Supplier search(?string $search)
  * @method static \Illuminate\Database\Eloquent\Builder|Supplier filter(array $filters)
  */
-class Supplier extends Model
+class Supplier extends Model implements Notesable
 {
     use HasFactory, SoftDeletes, HasUuid;
 

@@ -25,7 +25,7 @@ class FabricStockController extends Controller
         $result = app(CreateFabricStock::class)(FabricStockData::fromArray($data));
 
         if (isset($result['error'])) {
-            return ApiResponse::error($result['error'], $result['status'] ?? Response::HTTP_BAD_REQUEST);
+            return ApiResponse::error($result['error'], $result['status']);
         }
 
         return ApiResponse::data(

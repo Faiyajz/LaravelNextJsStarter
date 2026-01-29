@@ -6,9 +6,12 @@ use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property string $user_id
+ * @property User $user
+ */
 class BuyerProfile extends Model
 {
-    /** @use HasFactory<\Database\Factories\BuyerProfileFactory> */
     use HasFactory, HasUuid;
 
     protected $fillable = [

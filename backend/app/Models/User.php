@@ -12,6 +12,7 @@ use App\Traits\HasUuid;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
+ * @property string $id
  * @property string $password
  */
 class User extends Authenticatable implements MustVerifyEmail
